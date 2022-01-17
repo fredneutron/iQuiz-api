@@ -1,0 +1,27 @@
+{
+  "name": "iquiz-api",
+  "version": "1.0.0",
+  "description": "A quiz platform api",
+  "main": "index.js",
+  "scripts": {
+    "start": "",
+    "dev": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fredneutron/iQuiz-api.git"
+  },
+  "keywords": [
+    "quiz"
+  ],
+  "author": "Babatunde Adelabu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fredneutron/iQuiz-api/issues"
+  },
+  "homepage": "https://github.com/fredneutron/iQuiz-api#readme",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
+}
