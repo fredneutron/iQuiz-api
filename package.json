@@ -22,6 +22,8 @@
   },
   "homepage": "https://github.com/fredneutron/iQuiz-api#readme",
   "dependencies": {
-    "express": "^4.17.2"
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.2",
+    "mongoose": "^6.1.7"
   }
 }

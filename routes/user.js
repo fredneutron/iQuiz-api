@@ -1,12 +1,15 @@
 const express = require('express')
-user = express.Router()
+const userController = require('../controllers/user')
+
+
+const user = express.Router()
 
 user
-    .get()
-    .post()
-    .post()
-    .put()
+    .get('/:id', userController.getUser)
+    .post('/auth/signin', userController.signIn)
+    .post('/auth/signup', userController.store)
+    // .put()
 
 
 
-modules.export = user
+module.exports = user
