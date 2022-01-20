@@ -2,14 +2,16 @@ const User = require('../models/User')
 
 class UserController {
     static getUser(request, response) {
-        if (typeof request.params.id != 'undefined') {
-            User.findById(request.params.id, function (err, user) {
+        const { id } = request.params;
+        if (typeof id != 'undefined') {
+            User.findById(id, function (err, user) {
                 return err || response.status(201).json(user);
             });
         }
     }
-    static store(request, response) {
-
+    static signUp(request, response) {
+        const user = await User.create(request.body)
+        return response.status(201).json(user)
     }
     static signIn(request, response) {
         User.findOne({ email: request.body.email }, function (err, user) {
@@ -25,6 +27,25 @@ class UserController {
                 })
             }
         })
+    }
+    static update(request, response) {
+        const { id } = request.params;
+        if (typeof id != 'undefined') {
+            User.findByIdAndUpdate(id, request.body, function(err, user) {
+                if (err) {
+                    return response.status(404).json({ message: 'user not found' });
+                } else {
+                    return response.status(201).json(user);
+                }
+            })
+        }
+    }
+    static getProjects(request, response) {
+        const { id } = request.params;
+        if (typeof id != 'undefined') {
+            const user = await User.findById(id).populate('projects');
+            return response.status(201).json(user.projects);
+        }
     }
 }
 

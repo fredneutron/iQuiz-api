@@ -38,7 +38,11 @@ const UserSchema = new connect.Schema({
         type: String,
         required: true,
         enum: ['male', 'female', 'other']
-    }
+    },
+    projects: [{
+      type: connect.Schema.Types.ObjectId,
+      ref: 'Project'
+    }]
 
 });
 //set pre save
