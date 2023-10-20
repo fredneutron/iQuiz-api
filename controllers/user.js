@@ -9,10 +9,11 @@ class UserController {
             });
         }
     }
-    static signUp(request, response) {
+    static async signUp(request, response) {
         const user = await User.create(request.body)
         return response.status(201).json(user)
     }
+
     static signIn(request, response) {
         User.findOne({ email: request.body.email }, function (err, user) {
             if (err) {
@@ -28,6 +29,7 @@ class UserController {
             }
         })
     }
+
     static update(request, response) {
         const { id } = request.params;
         if (typeof id != 'undefined') {
@@ -40,7 +42,8 @@ class UserController {
             })
         }
     }
-    static getProjects(request, response) {
+    
+    static async getProjects(request, response) {
         const { id } = request.params;
         if (typeof id != 'undefined') {
             const user = await User.findById(id).populate('projects');

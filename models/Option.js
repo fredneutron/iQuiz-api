@@ -1,14 +1,14 @@
-const connect = require('./connect');
+const mongoose = require('../middlewares/connect');
 
 
-const OptionSchema = new connect.Schema({
+const OptionSchema = new mongoose.Schema({
     answer: {
         type: String,
         required: true
     },
-    quiz: {
-        type: connect.Schema.Types.ObjectId,
-        ref: 'Quiz'
+    questionId: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Question'
     }
 
 });

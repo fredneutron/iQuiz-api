@@ -1,9 +1,38 @@
-const connect = require('./connect');
-const bcrypt = require('bcryptjs');
+const mongoose = require('../middlewares/connect')
+const bcrypt = require('bcryptjs')
 
 const saltRounds = 10
 
-const UserSchema = new connect.Schema({
+/**
+ * @swagger
+ * User:
+ *  type: object
+ *  properties:
+ *    _id:
+ *      type: string
+ *      description: The auto-generated id of the user
+ *    firstname:
+ *      type: string
+ *      description: The first name of the user
+ *    lastname:
+ *      type: string
+ *      description: The last name of the user
+ *    email:
+ *      type: string
+ *      description: email of the user
+ *    password:
+ *      type: string
+ *      description: encrypted password of the user
+ *    dob:
+ *      type: date
+ *      description: date of birth of the user
+ *    gender:
+ *      type: string
+ *      description: gender selection of the user from the provided options
+ *          
+ */
+
+const UserSchema = new mongoose.Schema({
     firstname: {
         type: String,
         max: 35,
@@ -39,12 +68,13 @@ const UserSchema = new connect.Schema({
         required: true,
         enum: ['male', 'female', 'other']
     },
-    projects: [{
-      type: connect.Schema.Types.ObjectId,
-      ref: 'Project'
-    }]
-
-});
+    projects: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'Project'
+      }
+    ]
+},{ timestamps: true });
 //set pre save
 UserSchema.pre("save", function (next) {
     const user = this

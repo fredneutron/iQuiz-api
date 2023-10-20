@@ -3,10 +3,12 @@ const middleware = require('./middlewares/index')
 
 
 const app = express()
-const port = 3000
+const port = 3001
+const host = '127.0.0.1'
+const server = `http://${host}:${port}`;
 
-middleware.connect(app)
+middleware.connect(app, server)
 
 app.listen(port, () => {
-    console.log(`Listening at  http://127.0.0.1:${port}`);
+    console.log(`Listening at  ${server}`);
 })
