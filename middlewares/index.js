@@ -45,43 +45,6 @@ class Middleware {
                 },
               ],
             },
-            "components": {
-              "schemas": {
-                "User": {
-                  "type": "object",
-                  "properties": {
-                    "_id": {
-                      "type": "string",
-                      "description": "The auto-generated id of the user"
-                    },
-                    "firstname": {
-                      "type": "string",
-                      "description": "The first name of the user"
-                    },
-                    "lastname": {
-                      "type": "string",
-                      "description": "The last name of the user"
-                    },
-                    "email": {
-                      "type": "string",
-                      "description": "email of the user"
-                    },
-                    "password": {
-                      "type": "string",
-                      "description": "encrypted password of the user"
-                    },
-                    "dob": {
-                      "type": "date",
-                      "description": "date of birth of the user"
-                    },
-                    "gender": {
-                      "type": "string",
-                      "description": "gender selection of the user from the provided options"
-                    }
-                  }
-                },
-              },
-            },
             apis: ['./routes/*.js'],
             
         };
@@ -89,6 +52,21 @@ class Middleware {
         app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerOpenAPISpecification));
         
     }
+
+    static handleError(callback) {
+      try {
+          callback();
+      } catch(error) {
+          return response.status(400).json({ name: error.name, message: error.message})
+      }
+    }
+    static handleError(callback) {
+      try {
+          callback();
+      } catch(error) {
+          return response.status(400).json({ name: error.name, message: error.message})
+      }
+  }
 }
 
 module.exports = Middleware

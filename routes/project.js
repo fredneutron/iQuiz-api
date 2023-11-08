@@ -3,7 +3,30 @@ const projectController = require('../controllers/project')
 
 
 const project = express.Router()
-
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Project:
+ *          type: object
+ *          properties:
+ *              _id:
+ *                  type: string
+ *                  description: The auto-generated id of the project
+ *              title:
+ *                  type: string
+ *                  description: The title of the project
+ *                  required: true
+ *                  maxLength: 35
+ *              description:
+ *                  type: string
+ *                  description: The description of the project
+ *                  maxLength: 300
+ *              userId:
+ *                  type: object
+ *                  schema:
+ *                      $ref: '#/components/schemas/Project'
+ */
 project
     /**
      * @swagger
@@ -17,8 +40,10 @@ project
      *      responses:
      *          200:
      *              description: an array of project
-     *              schema:
-     *                  $ref: '#/components/schemas/Project'
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/Project'
      *          500:
      *              description: SERVER ERROR
      * 
@@ -42,8 +67,10 @@ project
      *      responses:
      *          200:
      *              description: an object of project
-     *              schema:
-     *                  $ref: '#/components/schemas/Project'
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/Project'
      *          500:
      *              description: SERVER ERROR
      * 
@@ -71,15 +98,18 @@ project
      *              application/x-www-form-urlencoded:
      *                  schema:
      *                      $ref: '#/components/schemas/Project'
-     *              text/plain:
-     *                  schema:
-     *                      type: string
+    *                   example:
+     *                      title: Project Test 1
+     *                      description: user1
+     *                      userId: 38477486389
      * 
      *      responses:
      *          200:
      *              description: an object of project
-     *              schema:
-     *                  $ref: '#/components/schemas/Project'
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/Project'
      *          500:
      *              description: SERVER ERROR
      * 
@@ -104,7 +134,7 @@ project
      *          description: a form of test creation
      *          required: true
      *          content:
-     *              application/json
+     *              application/json:
      *                  schema:
      *                      $ref: '#/components/schemas/Test'
      *              application/x-www-form-urlencoded:
@@ -114,8 +144,10 @@ project
      *      responses:
      *          200:
      *              description: an object of test
-     *              schema:
-     *                  $ref: '#/components/schemas/Test'
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/Project'
      *          500:
      *              description: SERVER ERROR
      * 
@@ -140,7 +172,7 @@ project
      *          description: a form of project
      *          required: true
      *          content:
-     *              application/json
+     *              application/json:
      *                  schema:
      *                      $ref: '#/components/schemas/Project'
      *              application/x-www-form-urlencoded:
@@ -150,8 +182,10 @@ project
      *      responses:
      *          200:
      *              description: an object of project
-     *              schema:
-     *                  $ref: '#/components/schemas/Project'
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/Project'
      *          500:
      *              description: SERVER ERROR
      * 
@@ -198,8 +232,10 @@ project
      *      response:
      *          200:
      *              description: an array of project's tests
-     *              schema:
-     *                  $ref: '#/components/schema/test'
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/Test'
      *          500:
      *              description: SERVER ERROR
      * 

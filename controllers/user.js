@@ -1,17 +1,27 @@
+const Middleware = require('../middlewares');
+const Helper = require('../middlewares/Helper');
 const User = require('../models/User')
 
+
 class UserController {
-    static getUser(request, response) {
-        const { id } = request.params;
-        if (typeof id != 'undefined') {
-            User.findById(id, function (err, user) {
-                return err || response.status(201).json(user);
-            });
-        }
+    static async all(request, response) {
+        const users = await User.find({});
+        return response.status(200).json(users);
     }
+
+    static async getUser(request, response) {
+        const { id } = request.params;
+        const user = await UserController.idVerification(id, false);
+        return response.status(200).json(user);
+    }
+
     static async signUp(request, response) {
-        const user = await User.create(request.body)
-        return response.status(201).json(user)
+        try {
+            const user = await User.create(request.body)
+            return response.status(200).json(user)
+        } catch(error) {
+            return response.status(400).json({ name: error.name, message: error.message})
+        }
     }
 
     static signIn(request, response) {
@@ -19,7 +29,7 @@ class UserController {
             if (err) {
                 return response.status(401).json({ message: 'Invalid username/password' });
             } else {
-                user.comparePassword(password, function(matchError, isMatch) {
+                user.comparePassword(request.body.password, function(matchError, isMatch) {
                     if (isMatch) {
                         return response.status(201).json(user);
                     } else {
@@ -30,26 +40,37 @@ class UserController {
         })
     }
 
-    static update(request, response) {
+    static async update(request, response) {
         const { id } = request.params;
-        if (typeof id != 'undefined') {
-            User.findByIdAndUpdate(id, request.body, function(err, user) {
-                if (err) {
-                    return response.status(404).json({ message: 'user not found' });
-                } else {
-                    return response.status(201).json(user);
-                }
-            })
+        try {
+            await UserController.idVerification(id);
+            const user = await User.updateOne({_id: id}, request.body)
+            return response.status(200).json(user);
+        } catch(error) {
+            return response.status(400).json({ name: error.name, message: error.message})
         }
     }
     
     static async getProjects(request, response) {
         const { id } = request.params;
-        if (typeof id != 'undefined') {
-            const user = await User.findById(id).populate('projects');
-            return response.status(201).json(user.projects);
+        try {
+            const user = await UserController.idVerification(id, false).populate('projects');
+            return response.status(200).json(user.projects);
+        } catch(error) {
+            return response.status(400).json({ name: error.name, message: error.message})
         }
     }
+
+    static async idVerification(id, bool = true) {
+        if (typeof id == 'undefined') {
+            return response.status(403).json({ name: 'Verification Error', message: `User id is required for this action.`});
+        }
+        const model = await User.findById(id);
+        if (model == null) {
+            return response.status(403).json({ name: 'Validation Error', message: `User id is incorrect.`});
+        }
+        return bool ? true : model;
+      }
 }
 
 module.exports = UserController

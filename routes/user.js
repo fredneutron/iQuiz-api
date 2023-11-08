@@ -1,10 +1,67 @@
 const express = require('express')
 const userController = require('../controllers/user')
+const UserController = require('../controllers/user')
 
 
 const user = express.Router()
-
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      User:
+ *          type: object
+ *          properties:
+ *              _id:
+ *                  type: string
+ *                  description: The auto-generated id of the user
+ *              first_name:
+ *                  type: string
+ *                  description: The first name of the user
+ *                  maxLength: 35
+ *              last_name:
+ *                  type: string
+ *                  description: The last name of the user
+ *                  maxLength: 35
+ *              email:
+ *                  type: string
+ *                  description: email of the user
+ *                  format: email
+ *              password:
+ *                  type: string
+ *                  description: encrypted password of the user
+ *                  format: password
+ *              dob:
+ *                  type: string
+ *                  description: date of birth of the user
+ *                  format: date
+ *              gender:
+ *                  type: string
+ *                  description: gender selection of the user from the provided options
+ *                  enum:
+ *                      - male
+ *                      - female
+ *                      - other
+ */
 user
+    /**
+     * @swagger
+     * /api/v1/user/all:
+     *  get:
+     *      tags:
+     *          - User
+     *      description: return users
+     *      responses:
+     *          200:
+     *              description: an array of users' objects
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/User'
+     *          500:
+     *              description: SERVER ERROR
+     * 
+     */
+    .get('/all', UserController.all)
     /**
      * @swagger
      * /api/v1/user/{id}:
@@ -12,8 +69,6 @@ user
      *      tags:
      *          - User
      *      description: return user detail
-     *      produces:
-     *          - application/json
      *      parameters:
      *          - name: id
      *            description: Particular User Object's ID (Automatically assigned by MongoDB)
@@ -23,8 +78,10 @@ user
      *      responses:
      *          200:
      *              description: an object of user
-     *              schema:
-     *                  $ref: '#/components/schemas/User'
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/User'
      *          500:
      *              description: SERVER ERROR
      * 
@@ -37,8 +94,6 @@ user
      *      tags:
      *          - User
      *      description: sign in valid user
-     *      produces:
-     *          - application/json
      *      requestBody:
      *          description: User login authenication
      *          required: true
@@ -68,8 +123,12 @@ user
      *      responses:
      *          200:
      *              description: an object of user
-     *              schema:
-     *                  $ref: '#/components/schemas/User'
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/User'
+     *          401:
+     *              description: Authentication Failed.
      *          500:
      *              description: SERVER ERROR
      * 
@@ -82,32 +141,54 @@ user
      *      tags:
      *          - User
      *      description: sign up for new users
-     *      produces:
-     *          - application/json
      *      requestBody:
      *          description: User sign up
      *          required: true
      *          content:
      *              application/json:
      *                  schema: 
-     *                      $ref: '#/components/User'
+     *                      $ref: "#/components/schemas/User"
+     *                  example:
+     *                      first_name: test
+     *                      last_name: user1
+     *                      email: user1@example.cpm
+     *                      password: user1spass
+     *                      dob: 2023-11-03
+     *                      gender: male
      *              application/xml:
      *                  schema:
      *                      $ref: '#/components/schemas/User'
+     *                  example:
+     *                      first_name: test
+     *                      last_name: user1
+     *                      email: user1@example.cpm
+     *                      password: user1spass
+     *                      dob: 2023-11-03
+     *                      gender: male
      *              application/x-www-form-urlencoded:
      *                  schema:
      *                      $ref: '#/components/schemas/User'
-     *              text/plain:
-     *                  schema:
-     *                      type: string
+     *                  example:
+     *                      first_name: test
+     *                      last_name: user1
+     *                      email: user1@example.cpm
+     *                      password: user1spass
+     *                      dob: 2023-11-03
+     *                      gender: male
      *
      *      responses:
      *          200:
-     *              description: an object of user
-     *              schema:
-     *                  $ref: '#/components/schemas/User'
+     *              description: OK
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/User'
+     *          400:
+     *              description:  Bad request.
+     *          403:
+     *              description: forbidden request.
      *          500:
-     *              description: SERVER ERROR
+     *              description: SERVER ERROR.
      * 
      */
     .post('/auth/signup', userController.signUp)
@@ -118,25 +199,54 @@ user
      *      tags:
      *          - User
      *      description: update user detail
-     *      produces:
-     *          - application/json
      *      parameters:
      *          - name: id
      *            description: Particular User Object's ID (Automatically assigned by MongoDB)
      *            in: path
      *            required: true
      *            type: string
-     *          - name: user
-     *            description: user object resources
-     *            in: body
-     *            required: true
-     *            schema:
-     *              $ref: '#/components/schemas/User'
+     *      
+     *      requestBody:
+     *          description: User sign up
+     *          required: true
+     *          content:
+     *              application/json:
+     *                  schema: 
+     *                      $ref: "#/components/schemas/User"
+     *                  example:
+     *                      first_name: test
+     *                      last_name: user1
+     *                      email: user1@example.cpm
+     *                      password: user1spass
+     *                      dob: 2023-11-03
+     *                      gender: male
+     *              application/xml:
+     *                  schema:
+     *                      $ref: '#/components/schemas/User'
+     *                  example:
+     *                      first_name: test
+     *                      last_name: user1
+     *                      email: user1@example.cpm
+     *                      password: user1spass
+     *                      dob: 2023-11-03
+     *                      gender: male
+     *              application/x-www-form-urlencoded:
+     *                  schema:
+     *                      $ref: '#/components/schemas/User'
+     *                  example:
+     *                      first_name: test
+     *                      last_name: user1
+     *                      email: user1@example.cpm
+     *                      password: user1spass
+     *                      dob: 2023-11-03
+     *                      gender: male
      *      responses:
      *          200:
      *              description: an object of user
-     *              schema:
-     *                  $ref: '#/components/schemas/User'
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/User'
      *          500:
      *              description: SERVER ERROR
      * 
@@ -149,8 +259,6 @@ user
      *      tags:
      *          - User
      *      description: return user's projects
-     *      produces:
-     *          - application/json
      *      parameters:
      *          - name: id
      *            description: Particular User Object's ID (Automatically assigned by MongoDB)
@@ -160,8 +268,10 @@ user
      *      responses:
      *          200:
      *              description: an array of user's projects
-     *              schema:
-     *                  $ref: '#/components/schemas/User'
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/User'
      *          500:
      *              description: SERVER ERROR
      * 
