@@ -25,7 +25,7 @@ const project = express.Router()
  *              userId:
  *                  type: object
  *                  schema:
- *                      $ref: '#/components/schemas/Project'
+ *                      $ref: '#/components/schemas/User'
  */
 project
     /**
@@ -98,7 +98,7 @@ project
      *              application/x-www-form-urlencoded:
      *                  schema:
      *                      $ref: '#/components/schemas/Project'
-    *                   example:
+     *                  example:
      *                      title: Project Test 1
      *                      description: user1
      *                      userId: 38477486389
@@ -137,10 +137,24 @@ project
      *              application/json:
      *                  schema:
      *                      $ref: '#/components/schemas/Test'
+     *                  example:
+     *                      name: Test 1
+     *                      description: Test 1 description
+     *                      instruction: please read carefully
+     *              application/xml:
+     *                  schema:
+     *                      $ref: '#/components/schemas/Test'
+     *                  example:
+     *                      name: Test 1
+     *                      description: Test 1 description
+     *                      instruction: please read carefully
      *              application/x-www-form-urlencoded:
      *                  schema:
      *                      $ref: '#/components/schemas/Test'
-     * 
+     *                  example:
+     *                      name: Test 1
+     *                      description: Test 1 description
+     *                      instruction: please read carefully
      *      responses:
      *          200:
      *              description: an object of test
@@ -206,7 +220,7 @@ project
      *            in: path
      *            required: true
      *            type: string
-     *      response:
+     *      responses:
      *          200:
      *              description: project is deleted successfully
      *          500:
@@ -229,7 +243,7 @@ project
      *            in: path
      *            required: true
      *            type: string
-     *      response:
+     *      responses:
      *          200:
      *              description: an array of project's tests
      *              content:

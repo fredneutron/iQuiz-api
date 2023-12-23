@@ -4,7 +4,64 @@ const questionController = require('../controllers/question')
 
 const question = express.Router()
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Question:
+ *          type: object
+ *          properties:
+ *              _id:
+ *                  type: string
+ *                  description: The auto-generated id of the question
+ *              question:
+ *                  type: string
+ *                  description: question
+ *                  required: true
+ *              answerId:
+ *                  type: object
+ *                  schema:
+ *                      $ref: '#/components/schemas/Option'
+ *              testId:
+ *                  type: object
+ *                  schema:
+ *                      $ref: '#/components/schemas/Test'
+ *      Option:
+ *          type: object
+ *          properties:
+ *              _id:
+ *                  type: string
+ *                  description: The auto-generated id of the option
+ *              answer:
+ *                  type: string
+ *                  description: answer
+ *              questionId:
+ *                  type: object
+ *                  schema:
+ *                      $ref: '#/components/schemas/Question'
+ */
 question
+    /**
+     * @swagger
+     * /api/v1/question/all:
+     *  get:
+     *      tags:
+     *          - Question
+     *      description: return all questions
+     *      produces:
+     *          - application/json
+     *      responses:
+     *          200:
+     *              description: an array of questions
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/Question'
+     *          500:
+     *              description: SERVER ERROR
+     * 
+     */
+    .get('/all', questionController.all)
     /**
      * @swagger
      * /api/v1/question/{id}:
@@ -20,11 +77,11 @@ question
      *            in: path
      *            required: true
      *            type: string
-     *      response:
+     *      responses:
      *          200:
      *              description: an object of question
      *              schema:
-     *                  $ref: '#/components/schema/question'
+     *                  $ref: '#/components/schema/Question'
      *          500:
      *              description: SERVER ERROR
      * 
@@ -50,11 +107,11 @@ question
      *            in: path
      *            required: true
      *            type: string
-     *      response:
+     *      responses:
      *          200:
      *              description: an object of option
      *              schema:
-     *                  $ref: '#/components/schema/option'
+     *                  $ref: '#/components/schema/Option'
      *          500:
      *              description: SERVER ERROR
      * 
@@ -80,11 +137,11 @@ question
      *            in: path
      *            required: false
      *            type: string
-     *      response:
+     *      responses:
      *          200:
      *              description: an array of options
      *              schema:
-     *                  $ref: '#/components/schema/option'
+     *                  $ref: '#/components/schema/Option'
      *          500:
      *              description: SERVER ERROR
      * 
@@ -105,17 +162,30 @@ question
      *            in: path
      *            required: true
      *            type: string
-     *          - name: option
-     *            description: form of option's creation
-     *            in: body
-     *            required: true
-     *            schema:
-     *              $ref: '#/components/schema/option'
-     *      response:
+     *      requestBody:
+     *          description: option object
+     *          required: true
+     *          content:
+     *              application/json:
+     *                  schema: 
+     *                      $ref: '#/components/schemas/Option'
+     *                  example:
+     *                      answer: what is your name?
+     *              application/xml:
+     *                  schema:
+     *                      $ref: '#/components/schemas/Option'
+     *                  example:
+     *                      answer: what is your name?
+     *              application/x-www-form-urlencoded:
+     *                  schema:
+     *                      $ref: '#/components/schemas/Option'
+     *                  example:
+     *                      answer: what is your name?
+     *      responses:
      *          200:
      *              description: an object of new option
      *              schema:
-     *                  $ref: '#/components/schema/option'
+     *                  $ref: '#/components/schema/Option'
      *          500:
      *              description: SERVER ERROR
      * 
@@ -136,17 +206,33 @@ question
      *            in: path
      *            required: true
      *            type: string
-     *          - name: question
-     *            description: an updated object of question
-     *            in: body
-     *            required: true
-     *            schema:
-     *              $ref: '#/components/schema/question'
-     *      response:
+     *      requestBody:
+     *          description: question update
+     *          required: true
+     *          content:
+     *              application/json:
+     *                  schema: 
+     *                      $ref: '#/components/schemas/Question'
+     *                  example:
+     *                      question: what is your name?
+     *                      answerId: 38477486389
+     *              application/xml:
+     *                  schema:
+     *                      $ref: '#/components/schemas/Question'
+     *                  example:
+     *                      question: what is your name?
+     *                      answerId: 38477486389
+     *              application/x-www-form-urlencoded:
+     *                  schema:
+     *                      $ref: '#/components/schemas/Question'
+     *                  example:
+     *                      question: what is your name?
+     *                      answerId: 38477486389
+     *      responses:
      *          200:
      *              description: an update object of question
      *              schema:
-     *                  $ref: '#/components/schema/question'
+     *                  $ref: '#/components/schema/Question'
      *          500:
      *              description: SERVER ERROR
      * 
@@ -172,13 +258,26 @@ question
      *            in: path
      *            required: true
      *            type: string
-     *          - name: option
-     *            description: an updated object of option
-     *            in: body
-     *            required: true
-     *            schema:
-     *              $ref: '#/components/schema/option'
-     *      response:
+     *      requestBody:
+     *          description: option object
+     *          required: true
+     *          content:
+     *              application/json:
+     *                  schema: 
+     *                      $ref: '#/components/schemas/Option'
+     *                  example:
+     *                      answer: what is your name?
+     *              application/xml:
+     *                  schema:
+     *                      $ref: '#/components/schemas/Option'
+     *                  example:
+     *                      answer: what is your name?
+     *              application/x-www-form-urlencoded:
+     *                  schema:
+     *                      $ref: '#/components/schemas/Option'
+     *                  example:
+     *                      answer: what is your name?
+     *      responses:
      *          200:
      *              description: an update object of option
      *              schema:
@@ -203,7 +302,7 @@ question
      *            in: path
      *            required: true
      *            type: string
-     *      response:
+     *      responses:
      *          200:
      *              description: question is deleted successfully
      *          500:
@@ -231,7 +330,7 @@ question
      *            in: path
      *            required: true
      *            type: string
-     *      response:
+     *      responses:
      *          200:
      *              description: option is deleted successfully
      *          500:

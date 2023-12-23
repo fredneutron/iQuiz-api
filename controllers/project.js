@@ -1,18 +1,20 @@
+const Helper = require('../middlewares/Helper');
 const Project = require('../models/Project');
+const Test = require('../models/Test');
 const User = require('../models/User');
 const TestController = require('./test');
-const UserController = require('./user');
 
 class ProjectController {
     static async all(request, response) {
-        const projects = await Project.find({});
+        const projects = await Project.find({}).populate({ path: 'tests', model: 'Test'});
         return response.status(200).json(projects);
     }
 
     static async get(request, response) {
         const { id } = request.params;
+        // const project = await new Helper(response).idVerification(Project, id, false);
         const project = await ProjectController.idVerification(Project, id, false);
-        return response.status(201).json(project);
+        return response.status(200).json(project);
     }
 
     static async create(request, response) {
@@ -26,7 +28,7 @@ class ProjectController {
             });
             return response.status(200).json(res);
         } catch(error) {
-            return response.status(400).json({ name: error.name, message: error.message})
+            return response.status(400).json(Helper.reportError(error))
         }
     }
 
@@ -35,11 +37,10 @@ class ProjectController {
         const { name, description, instruction  } = request.body;
         try {
             await ProjectController.idVerification(Project, id);
-            let projectId = id;
-            const test = await TestController.create({name, description, instruction, projectId});
+            const test = await Test.create({name, description, instruction, projectId: id});
             return response.status(200).json(test);
         } catch(error) {
-            return response.status(400).json({ name: error.name, message: error.message})
+            return response.status(400).json(Helper.reportError(error))
         }
     }
 
@@ -54,9 +55,10 @@ class ProjectController {
                 description,
                 userId
             });
+            if (res.acknowledged) return response.status(200).json({ message: "Project Updated successfully"})
             return response.status(200).json(res);
         } catch(error) {
-            return response.status(400).json({ name: error.name, message: error.message})
+            return response.status(400).json(Helper.reportError(error))
         }
     }
 
@@ -65,9 +67,9 @@ class ProjectController {
         try {
             await ProjectController.idVerification(Project, id);
             await Project.deleteOne({ _id : id });
-            return response.status(200).json({ message: `project is deleted successfully.` });
+            return response.status(200).json({ message: `project is deleted successfully.` })
         } catch(error) {
-            return response.status(400).json({ name: error.name, message: error.message})
+            return response.status(400).json(Helper.reportError(error))
         }
     }
 
@@ -79,14 +81,14 @@ class ProjectController {
 
     static async idVerification(Model, id, bool = true) {
         if (typeof id == 'undefined') {
-            return this.response.status(403).json({ name: 'Verification Error', message: `${Model.collection.collectionName} id is required for this action.`});
+            return response.status(403).json({ name: 'Verification Error', message: `${Model.collection.collectionName} id is required for this action.`});
         }
         const model = await Model.findById(id);
         if (model == null) {
-            return this.response.status(403).json({ name: 'Validation Error', message: `${Model.collection.collectionName} id is incorrect.`});
+            return response.status(403).json({ name: 'Validation Error', message: `${Model.collection.collectionName} id is incorrect.`});
         }
         return bool ? true : model;
-      }
+    }
 }
 
 module.exports = ProjectController

@@ -4,7 +4,56 @@ const testController = require('../controllers/test')
 
 const test = express.Router()
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Test:
+ *          type: object
+ *          properties:
+ *              _id:
+ *                  type: string
+ *                  description: The auto-generated id of the test
+ *              name:
+ *                  type: string
+ *                  description: The name of the test
+ *                  required: true
+ *                  
+ *              description:
+ *                  type: string
+ *                  description: The description of the Test
+ *                  
+ *              instruction:
+ *                  type: string
+ *                  description: instructions of the test
+ *                  required: false 
+ *              projectId:
+ *                  type: object
+ *                  schema:
+ *                      $ref: '#/components/schemas/Project'
+ */
 test
+    /**
+     * @swagger
+     * /api/v1/test/all:
+     *  get:
+     *      tags:
+     *          - Test
+     *      description: return all tests
+     *      produces:
+     *          - application/json
+     *      responses:
+     *          200:
+     *              description: an array of Test
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/Test'
+     *          500:
+     *              description: SERVER ERROR
+     * 
+     */
+    .get('/all', testController.all)
     /**
      * @swagger
      * /api/v1/test/{id}:
@@ -20,11 +69,14 @@ test
      *            in: path
      *            required: true
      *            type: string
-     *      response:
+     * 
+     *      responses:
      *          200:
      *              description: an object of test
-     *              schema:
-     *                  $ref: '#/components/schema/test'
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/Test'
      *          500:
      *              description: SERVER ERROR
      * 
@@ -45,11 +97,13 @@ test
      *            in: path
      *            required: true
      *            type: string
-     *      response:
+     *      responses:
      *          200:
      *              description: an object of test
-     *              schema:
-     *                  $ref: '#/components/schema/test'
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/Test'
      *          500:
      *              description: SERVER ERROR
      * 
@@ -75,11 +129,13 @@ test
      *            in: path
      *            required: false
      *            type: string
-     *      response:
+     *      responses:
      *          200:
-     *              description: an array of questions
-     *              schema:
-     *                  $ref: '#/components/schema/test'
+     *              description: an object of test
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/Test'
      *          500:
      *              description: SERVER ERROR
      * 
@@ -100,17 +156,35 @@ test
      *            in: path
      *            required: true
      *            type: string
-     *          - name: question
-     *            description: a form of question creation
-     *            in: body
-     *            required: true
-     *            schema:
-     *              $ref: '#/components/schema/question'
-     *      response:
+     *      requestBody:
+     *          description: question creation
+     *          required: true
+     *          content:
+     *              application/json:
+     *                  schema: 
+     *                      $ref: '#/components/schemas/Question'
+     *                  example:
+     *                      question: what is your name?
+     *                      answerId: 38477486389
+     *              application/xml:
+     *                  schema:
+     *                      $ref: '#/components/schemas/Question'
+     *                  example:
+     *                      question: what is your name?
+     *                      answerId: 38477486389
+     *              application/x-www-form-urlencoded:
+     *                  schema:
+     *                      $ref: '#/components/schemas/Question'
+     *                  example:
+     *                      question: what is your name?
+     *                      answerId: 38477486389
+     *      responses:
      *          200:
-     *              description: an object of question
-     *              schema:
-     *                  $ref: '#/components/schema/question'
+     *              description: an array of questions
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/Question'
      *          500:
      *              description: SERVER ERROR
      * 
@@ -131,17 +205,38 @@ test
      *            in: path
      *            required: true
      *            type: string
-     *          - name: Test
-     *            description: updated object of Test
-     *            in: body
-     *            required: true
-     *            schema:
-     *              $ref: '#/components/schema/test'
-     *      response:
+     *      requestBody:
+     *          description: Test object
+     *          required: true
+     *          content:
+     *              application/json:
+     *                  schema: 
+     *                      $ref: '#/components/schemas/Test'
+     *                  example:
+     *                      name: Title
+     *                      description: description
+     *                      instruction: instruction
+     *              application/xml:
+     *                  schema:
+     *                      $ref: '#/components/schemas/Test'
+     *                  example:
+     *                      name: Title
+     *                      description: description
+     *                      instruction: instruction
+     *              application/x-www-form-urlencoded:
+     *                  schema:
+     *                      $ref: '#/components/schemas/Test'
+     *                  example:
+     *                      name: Title
+     *                      description: description
+     *                      instruction: instruction
+     *      responses:
      *          200:
      *              description: an object of test
-     *              schema:
-     *                  $ref: '#/components/schema/test'
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/Test'
      *          500:
      *              description: SERVER ERROR
      * 
@@ -162,7 +257,7 @@ test
      *            in: path
      *            required: true
      *            type: string
-     *      response:
+     *      responses:
      *          200:
      *              description: test is deleted successfully
      *          500:

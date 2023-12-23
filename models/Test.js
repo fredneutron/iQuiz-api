@@ -16,11 +16,11 @@ const TestSchema = new mongoose.Schema({
         required: false
     },
     question: [{
-        type: mongoose.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Question'
     }],
     projectId: {
-        type: mongoose.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Project'
     }
 

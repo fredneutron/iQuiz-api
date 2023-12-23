@@ -20,7 +20,7 @@ class UserController {
             const user = await User.create(request.body)
             return response.status(200).json(user)
         } catch(error) {
-            return response.status(400).json({ name: error.name, message: error.message})
+            return response.status(400).json(Helper.reportError(error))
         }
     }
 
@@ -31,7 +31,7 @@ class UserController {
             } else {
                 user.comparePassword(request.body.password, function(matchError, isMatch) {
                     if (isMatch) {
-                        return response.status(201).json(user);
+                        return response.status(200).json(user);
                     } else {
                         return response.status(401).json({ message: 'Invalid username/password' });
                     }
@@ -47,17 +47,18 @@ class UserController {
             const user = await User.updateOne({_id: id}, request.body)
             return response.status(200).json(user);
         } catch(error) {
-            return response.status(400).json({ name: error.name, message: error.message})
+            return response.status(400).json(Helper.reportError(error))
         }
     }
     
     static async getProjects(request, response) {
         const { id } = request.params;
         try {
-            const user = await UserController.idVerification(id, false).populate('projects');
-            return response.status(200).json(user.projects);
+            const userDetail = await UserController.idVerification(id, false)
+            const user = userDetail.populate('projects')
+            return response.status(200).json(user);
         } catch(error) {
-            return response.status(400).json({ name: error.name, message: error.message})
+            return response.status(400).json(Helper.reportError(error))
         }
     }
 

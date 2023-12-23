@@ -2,24 +2,7 @@ const mongoose = require('../middlewares/connect')
 const bcrypt = require('bcryptjs')
 const Test = require('./Test')
 
-/**
- * @swagger
- * Project:
- *  type: object
- *  properties:
- *      title:
- *          type: string
- *          required: true
- *          maximum: 35
- *      description:
- *          type: string
- *          required: false
- *          maximum: 300
- *      userId:
- *          type: object
- *          schema:
- *              ref: '#/components/schemas/user'
- */
+
 const ProjectSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -31,11 +14,11 @@ const ProjectSchema = new mongoose.Schema({
         max: 300
     },
     tests: [{ 
-        type: mongoose.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Test'
     }],
     userId: {
-        type: mongoose.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }
 
