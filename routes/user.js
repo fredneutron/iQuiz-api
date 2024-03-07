@@ -41,6 +41,9 @@ const user = express.Router()
  *                      - male
  *                      - female
  *                      - other
+ *              projects:
+ *                  type: array
+ *                  description: array of objects of projects.
  */
 user
     /**

@@ -1,9 +1,10 @@
-const mongoose = require('../middlewares/connect')
-const bcrypt = require('bcryptjs')
-const Test = require('./Test')
+const mongoose = require('mongoose')
+const Test = require('./Test');
+const User = require('./User');
 
+const Schema = mongoose.Schema;
 
-const ProjectSchema = new mongoose.Schema({
+const ProjectSchema = new Schema({
     title: {
         type: String,
         max: 35,
@@ -14,11 +15,11 @@ const ProjectSchema = new mongoose.Schema({
         max: 300
     },
     tests: [{ 
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'Test'
     }],
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User'
     }
 
@@ -26,12 +27,19 @@ const ProjectSchema = new mongoose.Schema({
 
 ProjectSchema.pre('deleteOne', { document: false, query: true }, async function() {
     const doc = await this.model.findOne(this.getFilter());
+    const user = await User.findById(doc.userId)
+    user.projects = user.projects.splice(user.projects.findIndex(e => e === doc._id), 1);
     await Test.deleteMany({ projectId: doc._id });
+    await user.save();
 });
 
 ProjectSchema.pre( "deleteMany", { document: false, query: true }, async function (next) {
     const docs = await this.model.find(this.getFilter());
-    const test = docs.map((item) => item._id);
+    const test = docs.map(async (item) => {
+        const user = await User.findById(item.userId)
+        user.projects = user.projects.splice(user.projects.findIndex(e => e === item._id), 1);
+        return item._id;
+    });
     await Test.deleteMany({ projectId: { $in: test } });
     next();
 });

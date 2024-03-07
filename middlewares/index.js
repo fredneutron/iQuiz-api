@@ -9,6 +9,8 @@ const question = require('../routes/question.js')
 class Middleware {
     // handle all route through one channel
     static connect(app, server) {
+        // connect DB
+        require('./connect.js')
         // setup app input and output processing
         app.use(express.json()) // for parsing application/json
         app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded

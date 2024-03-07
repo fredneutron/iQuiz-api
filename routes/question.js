@@ -89,6 +89,27 @@ question
     .get('/:id', questionController.get)
     /**
      * @swagger
+     * /api/v1/question/options/all:
+     *  get:
+     *      tags:
+     *          - Option
+     *      description: return all options
+     *      produces:
+     *          - application/json
+     *      responses:
+     *          200:
+     *              description: an array of options
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/Option'
+     *          500:
+     *              description: SERVER ERROR
+     * 
+     */
+    .get('options/all', questionController.optionAll)
+    /**
+     * @swagger
      * /api/v1/question/{id}/options/{optionId}:
      *  get:
      *      tags:

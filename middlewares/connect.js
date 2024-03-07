@@ -6,7 +6,8 @@ const host = '127.0.0.1';
 
 async function main() {
   await mongoose.connect(`mongodb://${host}:${dbport}/${dbname}`)
-  await mongoose.connection.on('connection', () => console.log('connected'))
+  state = ['disconnected.', 'connected.', 'connecting...', 'disconnecting...']
+  console.log('MongoDB ' ,state[mongoose.connection.readyState])
   await mongoose.connection.on('error', err => console.log(err));
 }
 

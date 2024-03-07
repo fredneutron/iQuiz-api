@@ -22,6 +22,9 @@ const project = express.Router()
  *                  type: string
  *                  description: The description of the project
  *                  maxLength: 300
+ *              tests:
+ *                  type: array
+ *                  description: array of objects of tests.
  *              userId:
  *                  type: object
  *                  schema:

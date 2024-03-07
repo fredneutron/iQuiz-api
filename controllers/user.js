@@ -55,7 +55,7 @@ class UserController {
         const { id } = request.params;
         try {
             const userDetail = await UserController.idVerification(id, false)
-            const user = userDetail.populate('projects')
+            const user = userDetail.projects;
             return response.status(200).json(user);
         } catch(error) {
             return response.status(400).json(Helper.reportError(error))

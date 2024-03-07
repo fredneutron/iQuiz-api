@@ -1,8 +1,10 @@
-const mongoose = require('../middlewares/connect')
-const Question = require('./Question')
+const mongoose = require('mongoose')
+const Question = require('./Question');
+const Project = require('./Project');
 
+const Schema = mongoose.Schema;
 
-const TestSchema = new mongoose.Schema({
+const TestSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -15,12 +17,12 @@ const TestSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    question: [{
-        type: mongoose.Schema.Types.ObjectId,
+    questions: [{
+        type: Schema.Types.ObjectId,
         ref: 'Question'
     }],
     projectId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'Project'
     }
 
@@ -28,12 +30,20 @@ const TestSchema = new mongoose.Schema({
 
 TestSchema.pre('deleteOne', { document: false, query: true }, async function() {
     const doc = await this.model.findOne(this.getFilter());
+    const project = await Project.findById(doc.projectId)
+    project.tests = project.tests.splice(project.tests.findIndex(e => e === doc._id), 1);
     await Question.deleteMany({ testId: doc._id });
+    await project.save()
 });
 
 TestSchema.pre( "deleteMany", { document: false, query: true }, async function (next) {
     const docs = await this.model.find(this.getFilter());
-    const test = docs.map((item) => item._id);
+    const test = docs.map(async (item) => {
+        const project = await Project.findById(item.projectId)
+        project.tests = project.tests.splice(project.tests.findIndex(e => e === item._id), 1);
+        await project.save();
+        return item._id;
+    });
     await Question.deleteMany({ testId: { $in: test } });
     next();
 });

@@ -1,9 +1,10 @@
-const mongoose = require('../middlewares/connect')
+const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 
+const Schema = mongoose.Schema;
 const saltRounds = 10
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new Schema({
     first_name: {
         type: String,
         max: 35,
@@ -41,8 +42,8 @@ const UserSchema = new mongoose.Schema({
     },
     projects: [
       {
-        type: mongoose.Types.ObjectId,
-        ref: 'Project'
+        type: Schema.Types.ObjectId,
+        ref: "Project"
       }
     ]
 },{ timestamps: true });

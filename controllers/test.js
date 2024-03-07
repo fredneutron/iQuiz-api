@@ -39,14 +39,14 @@ class TestController {
         const { id } = request.params;
         const { question, answerId } = request.body;
         try {
-            await TestController.idVerification(Test, id);
-            // console.log("Hello");
+            const test = await TestController.idVerification(Test, id, false);
             const newQuestion = await Question.create({
                 question,
                 answerId,
                 testId: id
             });
-            // console.log(newQuestion);
+            test.questions.push(newQuestion.id)
+            await test.save()
             return response.status(200).json(newQuestion);
         } catch(error) {
             return response.status(400).json(Helper.reportError(error))

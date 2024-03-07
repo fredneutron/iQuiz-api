@@ -18,15 +18,16 @@ const test = express.Router()
  *                  type: string
  *                  description: The name of the test
  *                  required: true
- *                  
  *              description:
  *                  type: string
  *                  description: The description of the Test
- *                  
  *              instruction:
  *                  type: string
  *                  description: instructions of the test
  *                  required: false 
+ *              question:
+ *                  type: array
+ *                  description: array of objects of question
  *              projectId:
  *                  type: object
  *                  schema:

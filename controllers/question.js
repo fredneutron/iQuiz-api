@@ -27,13 +27,17 @@ class QuestionController {
 
     }
 
+    static async optionAll(request, response) {
+        const options = await Option.find({});
+        return response.status(200).json(options);
+    }
+
     static async getOptions(request, response) {
         const { id, limit } = request.params;
         try {
             await QuestionController.idVerification(id);
             const amount = typeof limit != 'undefined' ? limit : "4";
-            // const option = await Option.find({ questionId: id }).limit(amount);
-            const option = await Option.find({ questionId: "658736cbaf3f240f93e35b6c" });
+            const option = await Option.find({ questionId: id }).limit(amount);
             return response.status(200).json(option);
         } catch(error) {
             return response.status(400).json(Helper.reportError(error))
@@ -44,12 +48,14 @@ class QuestionController {
         const { id } = request.params;
         const { answer } = request.body;
         try {
-            await QuestionController.idVerification(id);
+            const question = await QuestionController.idVerification(id, false);
             let questionId = id;
             const option = await Option.create({
                 answer,
                 questionId
             });
+            question.options.push(option.id);
+            await question.save();
             return response.status(200).json(option);
         } catch(error) {
             return response.status(400).json(Helper.reportError(error))
