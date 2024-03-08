@@ -12,6 +12,7 @@ class UserController {
     static async getUser(request, response) {
         const { id } = request.params;
         const user = await UserController.idVerification(id, false);
+        user.projects =  await Project.find({ userId: id });
         return response.status(200).json(user);
     }
 
@@ -54,9 +55,9 @@ class UserController {
     static async getProjects(request, response) {
         const { id } = request.params;
         try {
-            const userDetail = await UserController.idVerification(id, false)
-            const user = userDetail.projects;
-            return response.status(200).json(user);
+            await UserController.idVerification(id, false)
+            const projects = await Project.find({ userId: id });
+            return response.status(200).json(projects);
         } catch(error) {
             return response.status(400).json(Helper.reportError(error))
         }

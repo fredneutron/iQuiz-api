@@ -5,13 +5,14 @@ const User = require('../models/User');
 
 class ProjectController {
     static async all(request, response) {
-        const projects = await Project.find({}).populate("tests");
+        const projects = await Project.find({});
         return response.status(200).json(projects);
     }
 
     static async get(request, response) {
         const { id } = request.params;
         const project = await ProjectController.idVerification(Project, id, false);
+        project.tests = await Test.find({ projectId: id });
         return response.status(200).json(project);
     }
 
@@ -76,8 +77,9 @@ class ProjectController {
 
     static async tests(request, response) {
         const { id } = request.params;
-        const project = await ProjectController.idVerification(Project, id, false);
-        return response.status(201).json(project.tests);
+        await ProjectController.idVerification(Project, id, false);
+        const tests = await Test.find({ projectId: id });
+        return response.status(201).json(tests);
     }
 
     static async idVerification(Model, id, bool = true) {
