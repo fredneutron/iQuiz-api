@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+const Project = require('./Project');
 
 const Schema = mongoose.Schema;
 const saltRounds = 10
@@ -47,7 +48,7 @@ const UserSchema = new Schema({
       }
     ]
 },{ timestamps: true });
-//set pre save
+// set pre save
 UserSchema.pre("save", function (next) {
     const user = this
     if (this.isModified("password") || this.isNew) {
@@ -79,5 +80,17 @@ UserSchema.methods.comparePassword = function(password, callback) {
       }
     })
   }
+// set pre delete
+UserSchema.pre('deleteOne', { document: false, query: true }, async function() {
+    const doc = await this.model.findOne(this.getFilter());
+    await Project.deleteMany({ userId: doc._id });
+});
+
+UserSchema.pre( "deleteMany", { document: false, query: true }, async function (next) {
+    const docs = await this.model.find(this.getFilter());
+    const project = docs.map((item) => item._id);
+    await Project.deleteMany({ userId: { $in: project } });
+    next();
+});
 
 module.exports = mongoose.model('User', UserSchema);

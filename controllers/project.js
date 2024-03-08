@@ -48,17 +48,16 @@ class ProjectController {
 
     static async update(request, response) {
         const { id } = request.params;
-        const { title, description, userId  } = request.body;
+        const { title, description } = request.body;
         try {
-            await ProjectController.idVerification(Project, id);
-            await ProjectController.idVerification(User, id);
-            const res = await Project.updateOne({ _id : id }, {
+            const project = await ProjectController.idVerification(Project, id);
+            await ProjectController.idVerification(User, project.userId);
+            const newProject = await Project.updateOne({ _id : id }, {
                 title,
-                description,
-                userId
+                description
             });
-            if (res.acknowledged) return response.status(200).json({ message: "Project Updated successfully"})
-            return response.status(200).json(res);
+            if (newProject.acknowledged) return response.status(200).json({ message: "Project Updated successfully"});
+            return response.status(200).json(newProject);
         } catch(error) {
             return response.status(400).json(Helper.reportError(error))
         }
