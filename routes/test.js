@@ -112,11 +112,11 @@ test
     .get('/:name/name', testController.getByName)
     /**
      * @swagger
-     * /api/v1/test/{id}/questions/{limit}:
+     * /api/v1/test/{id}/questions/:
      *  get:
      *      tags:
      *          - Test
-     *      description: get questions byt test id with limit
+     *      description: get questions byt test id
      *      produces:
      *          - application/json
      *      parameters:
@@ -124,11 +124,6 @@ test
      *            description: Particular Test Object's ID (Automatically assigned by MongoDB)
      *            in: path
      *            required: true
-     *            type: string
-     *          - name: limit
-     *            description: particular amount for limit, default is 30
-     *            in: path
-     *            required: false
      *            type: string
      *      responses:
      *          200:
@@ -141,10 +136,10 @@ test
      *              description: SERVER ERROR
      * 
      */
-    .get('/:id/questions/:limit', testController.getQuestions)
+    .get('/:id/questions/', testController.testQuestions)
     /**
      * @swagger
-     * /api/v1/test/{id}/questions/create:
+     * /api/v1/test/{id}/question/create:
      *  post:
      *      tags:
      *          - Question
@@ -190,7 +185,7 @@ test
      *              description: SERVER ERROR
      * 
      */
-    .post('/:id/questions/create', testController.create)
+    .post('/:id/question/create', testController.create)
     /**
      * @swagger
      * /api/v1/test/{id}:
@@ -266,5 +261,128 @@ test
      * 
      */
     .delete('/:id', testController.delete)
+    /**
+     * @swagger
+     * /api/v1/test/{id}/start:
+     *  post:
+     *      tags:
+     *          - Test
+     *      description: create test session for candidate
+     *      produces:
+     *          - application/json
+     *      parameters:
+     *          - name: id
+     *            description: Particular Test Object's ID (Automatically assigned by MongoDB)
+     *            in: path
+     *            required: true
+     *            type: string
+     *      requestBody:
+     *          description: test session creation or update
+     *          required: true
+     *          content:
+     *              application/json:
+     *                  example:
+     *                      name: candidate name
+     *                      email: candidate email
+     *              application/xml:
+     *                  example:
+     *                      name: candidate name
+     *                      email: candidate email
+     *              application/x-www-form-urlencoded:
+     *                 example:
+     *                      name: candidate name
+     *                      email: candidate email
+     *      responses:
+     *          200:
+     *              result: Boolean,
+     *              message: message
+     *              questions: questions
+     *          500:
+     *              description: SERVER ERROR
+     * 
+     */
+    .post('/:id/start', testController.startTestSession)
+    /**
+     * @swagger
+     * /api/v1/test/{id}/end:
+     *  put:
+     *      tags:
+     *          - Test
+     *      description: end test session for candidate
+     *      produces:
+     *          - application/json
+     *      parameters:
+     *          - name: id
+     *            description: Particular Test Object's ID (Automatically assigned by MongoDB)
+     *            in: path
+     *            required: true
+     *            type: string
+     *      requestBody:
+     *          description: test session termination
+     *          required: true
+     *          content:
+     *              application/json:
+     *                  example:
+     *                      email: candidate email
+     *                      score: 5
+     *                      no_of_questions: 30
+     *                      no_of_question_attempted: 20
+     *              application/xml:
+     *                  example:
+     *                      email: candidate email
+     *                      score: 5
+     *                      no_of_questions: 30
+     *                      no_of_question_attempted: 20
+     *              application/x-www-form-urlencoded:
+     *                  example:
+     *                      email: candidate email
+     *                      score: 5
+     *                      no_of_questions: 30
+     *                      no_of_question_attempted: 20
+     *      responses:
+     *          200:
+     *              message: Test session ended successfully
+     *          500:
+     *              description: SERVER ERROR
+     * 
+     */
+    .put('/:id/end', testController.endTestSession)
+    /**
+     * @swagger
+     * /api/v1/test/{id}/rules:
+     *  put:
+     *      tags:
+     *          - Test
+     *      description: set rules for test
+     *      produces:
+     *          - application/json
+     *      parameters:
+     *          - name: id
+     *            description: Particular Test Object's ID (Automatically assigned by MongoDB)
+     *            in: path
+     *            required: true
+     *            type: string
+     *      requestBody:
+     *          description: set rules for test
+     *          required: true
+     *          content:
+     *              application/json:
+     *                  schema:
+     *                      $ref: '#/components/schemas/TestRule'
+     *              application/xml:
+     *                  schema:
+     *                      $ref: '#/components/schemas/TestRule'
+     *              application/x-www-form-urlencoded:
+     *                  schema:
+     *                      $ref: '#/components/schemas/TestRule'
+     *      responses:
+     *          200:
+     *              message: Test session ended successfully
+     *          500:
+     *              description: SERVER ERROR
+     * 
+     */
+    .put('/:id/rules', testController.setTestRules)
+    .get('/:id/rules', testController.getTestRules)
 
 module.exports = test

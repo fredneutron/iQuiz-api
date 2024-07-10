@@ -3,7 +3,7 @@ const middleware = require('./middlewares/index')
 
 
 const app = express()
-const port = 3001
+const port = 3002
 const host = '127.0.0.1'
 const server = `http://${host}:${port}`;
 

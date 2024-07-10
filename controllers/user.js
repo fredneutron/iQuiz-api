@@ -1,6 +1,7 @@
 const Middleware = require('../middlewares');
 const Helper = require('../middlewares/Helper');
 const User = require('../models/User')
+const Project = require('../models/Project')
 
 
 class UserController {
@@ -12,7 +13,7 @@ class UserController {
     static async getUser(request, response) {
         const { id } = request.params;
         const user = await UserController.idVerification(id, false);
-        user.projects =  await Project.find({ userId: id });
+        user.projects =  await Project.find({ userId: id }).select(['-tests']);
         return response.status(200).json(user);
     }
 

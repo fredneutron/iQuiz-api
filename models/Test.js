@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Question = require('./Question');
 const Project = require('./Project');
+const TestRule = require('./TestRule');
 
 const Schema = mongoose.Schema;
 
@@ -46,6 +47,17 @@ TestSchema.pre( "deleteMany", { document: false, query: true }, async function (
     });
     await Question.deleteMany({ testId: { $in: test } });
     next();
+});
+
+TestSchema.post('find', async function (docs) {
+    if (Array.isArray(docs)) {
+        for (let index = 0; index < docs.length; index++) {
+            const doc = docs[index]
+            doc.rules = await TestRule.find({ testId: doc.id });
+        }
+    } else {
+        doc.rules = await TestRule.find({ testId: doc.id });
+    }
 });
 
 module.exports = mongoose.model('Test', TestSchema);

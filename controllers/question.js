@@ -4,7 +4,7 @@ const Helper = require('../middlewares/Helper');
 
 class QuestionController {
     static async all(request, response) {
-        const questions = await Question.find({});
+        const questions = await Question.find({}).select(['-options']);
         return response.status(200).json(questions);
     }
 

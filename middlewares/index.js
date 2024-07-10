@@ -51,8 +51,20 @@ class Middleware {
             
         };
         const swaggerOpenAPISpecification = swaggerJsDoc(swaggerJsDocOption)
-        app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerOpenAPISpecification));
-        
+        app.use(`${version}/`, swaggerUi.serve, swaggerUi.setup(swaggerOpenAPISpecification));
+        // handle errors
+        app.use((error, request, response, next) => {
+          if (error) {
+            const statusCode = error.status ?? 500;
+            const message = error.message || "Something went wrong.";
+            
+            response.status(statusCode).json({
+              error: statusCode,
+              message: message
+            });
+            next(response);
+          }
+        })
     }
 
     static handleError(callback) {
@@ -62,13 +74,7 @@ class Middleware {
           return response.status(400).json({ name: error.name, message: error.message})
       }
     }
-    static handleError(callback) {
-      try {
-          callback();
-      } catch(error) {
-          return response.status(400).json({ name: error.name, message: error.message})
-      }
-  }
+
 }
 
 module.exports = Middleware

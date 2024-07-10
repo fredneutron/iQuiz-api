@@ -5,14 +5,14 @@ const User = require('../models/User');
 
 class ProjectController {
     static async all(request, response) {
-        const projects = await Project.find({});
+        const projects = await Project.find({}).select(['-tests']);
         return response.status(200).json(projects);
     }
 
     static async get(request, response) {
         const { id } = request.params;
         const project = await ProjectController.idVerification(Project, id, false);
-        project.tests = await Test.find({ projectId: id });
+        project.tests = await Test.find({ projectId: id }).select(['-questions']);
         return response.status(200).json(project);
     }
 

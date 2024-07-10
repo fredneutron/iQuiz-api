@@ -107,7 +107,7 @@ question
      *              description: SERVER ERROR
      * 
      */
-    .get('options/all', questionController.optionAll)
+    .get('/options/all', questionController.optionAll)
     /**
      * @swagger
      * /api/v1/question/{id}/options/{optionId}:
